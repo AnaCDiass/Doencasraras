@@ -10,10 +10,28 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
-    'django.contrib.admin', 'django.contrib.auth', 'django.contrib.contenttypes',
-    'django.contrib.sessions', 'django.contrib.messages', 'django.contrib.staticfiles',
-    'accounts', 'relatos', 'ong', 'conteudos', 'eventos', 'ajuda', 'core',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+
+    'accounts.apps.AccountsConfig',  # só essa!
+
+    # Seus apps
+    'relatos',
+    'ong',
+    'conteudos',
+    'eventos',
+    'ajuda',
+    'core',
+    'cadastro.apps.CadastroConfig',
+
+    # Extras
+    'widget_tweaks',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -25,13 +43,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# seu projeto é "config", então:
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / "templates"],  # <- seu templates global
-        'APP_DIRS': True,                   # <- importante para achar templates nos apps
+        'DIRS': [BASE_DIR / "templates"],
+        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -43,6 +62,7 @@ TEMPLATES = [
     }
 ]
 
+# também é "config"
 WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
@@ -70,24 +90,22 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-AUTH_USER_MODEL = 'accounts.User'  # custom user (ver abaixo)
+
+AUTH_USER_MODEL = 'accounts.User'
+
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'home'
 
 LANGUAGE_CODE = 'pt-br'
-
 TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
-
 USE_TZ = True
 
 STATIC_URL = '/static/'
-
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "app/static/"),
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
