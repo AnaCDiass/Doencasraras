@@ -17,7 +17,9 @@ class Paciente(models.Model):
     nome_completo = models.CharField(max_length=200)
     email = models.EmailField(unique=True)
     doenca = models.CharField(max_length=200, blank=True, null=True)
-    aprovado = models.BooleanField(default=False)  # aprovado pelo admin
+    laudo = models.FileField(upload_to='laudos/', blank=True, null=True)  # ⬅️ AQUI
+    aprovado = models.BooleanField(default=False)
 
     def __str__(self):
         return self.nome_completo
+

@@ -1,8 +1,8 @@
 from django.apps import AppConfig
 
-class AccountsConfig(AppConfig):
+class CadastroConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'accounts'
+    name = 'cadastro'
 
     def ready(self):
-        import accounts.signals
+        pass  # remover o import dos signals
