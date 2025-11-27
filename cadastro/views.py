@@ -125,3 +125,12 @@ def dashboard_paciente(request):
 @login_required
 def dashboard_usuario(request):
     return render(request, 'dashboards/usuario.html')
+
+# ========== PERFIL ==========
+@login_required
+def perfil_view(request):
+    return render(request, 'cadastro/perfil.html', {
+        'user': request.user
+    })
+
+

@@ -14,4 +14,6 @@ urlpatterns = [
     path('eventos/', include('eventos.urls')),
     path('ajuda/', include('ajuda.urls')),
     path('cadastro/', include('cadastro.urls')),  # ADICIONAR ESTA LINHA
+    path('accounts/', include('django.contrib.auth.urls')),
+
 ]
