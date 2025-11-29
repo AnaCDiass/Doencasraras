@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}UniRaros{% endblock %}</title>
 
@@ -22,6 +23,36 @@
     </style>
 </head>
 
+<script>
+document.addEventListener('click', function(e){
+    // clique em ícone com classe .toggle-password
+    const toggle = e.target.closest('.toggle-password');
+    if (!toggle) return;
+
+    // se tiver data-target usa; senão procura input tipo password dentro do mesmo .input-group
+    const targetSelector = toggle.getAttribute('data-target');
+    let input = null;
+    if (targetSelector) {
+        input = document.querySelector(targetSelector);
+    } else {
+        const ig = toggle.closest('.input-group');
+        if (ig) input = ig.querySelector('input[type="password"], input[type="text"]');
+    }
+    if (!input) return;
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        // troca ícone se estiver usando bootstrap icons
+        toggle.querySelector('i')?.classList.remove('bi-eye');
+        toggle.querySelector('i')?.classList.add('bi-eye-slash');
+    } else {
+        input.type = 'password';
+        toggle.querySelector('i')?.classList.remove('bi-eye-slash');
+        toggle.querySelector('i')?.classList.add('bi-eye');
+    }
+});
+</script>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
@@ -35,8 +66,8 @@
 
                     <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'sobre' %}">Sobre</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'ajuda' %}">Ajuda</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'relatos-list' %}">Relatos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'ajuda:ajuda' %}">Ajuda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'relatos:relatos-list' %}">Relatos</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'lista_eventos' %}">Eventos</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'ong_list' %}">Ongs</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'lista_conteudos' %}">Conteúdos</a></li>
