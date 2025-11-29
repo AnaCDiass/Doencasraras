@@ -2,7 +2,10 @@
 {% block title %}Relatos - UniRaros{% endblock %}
 
 {% block content %}
-<h2 class="mb-4">Relatos da Comunidade</h2>
+
+<div class="container mt-4">
+
+<h2 class="mb-4 text-center">Relatos da Comunidade</h2>
 
 <div class="text-end mb-3">
     {% if user.is_authenticated and user.tipo_usuario == 'paciente' and user.paciente_profile.aprovado %}
@@ -10,10 +13,10 @@
     {% endif %}
 </div>
 
-<div class="row">
+<div class="row justify-content-center">
     {% for relato in relatos %}
         <div class="col-md-6 mb-4">
-            <div class="card shadow-sm">
+            <div class="card shadow-sm h-100">
                 <div class="card-body">
                     <h5 class="card-title">{{ relato.titulo }}</h5>
                     <p class="card-text">{{ relato.texto|truncatewords:30 }}</p>
@@ -25,7 +28,10 @@
             </div>
         </div>
     {% empty %}
-        <p>Nenhum relato encontrado.</p>
+        <p class="text-center">Nenhum relato encontrado.</p>
     {% endfor %}
 </div>
+
+</div>
+
 {% endblock %}
