@@ -6,6 +6,8 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
 from django.contrib.auth import get_user_model
 from .forms import UsuarioForm, PacienteForm, LoginForm
+from .models import Profile
+
 
 User = get_user_model()
 
@@ -23,7 +25,7 @@ def cadastrar_usuario(request):
         form = UsuarioForm(request.POST)
         if form.is_valid():
             user = form.save()
-            user.tipo_usuario = "usuario"
+            user.user_type = "staff"  # ✅ CORRIGIDO: user_type em vez de tipo_usuario
             user.save()
 
             messages.success(request, 'Cadastro realizado com sucesso!')
@@ -40,7 +42,6 @@ def cadastrar_paciente(request):
         form = PacienteForm(request.POST, request.FILES)
 
         if form.is_valid():
-
             email = form.cleaned_data['email']
 
             # ----- GERA USERNAME AUTOMÁTICO ÚNICO -----
@@ -57,7 +58,8 @@ def cadastrar_paciente(request):
                 username=username,
                 email=email,
                 password=form.cleaned_data['senha'],
-                tipo_usuario="paciente"
+                user_type="patient",  # ✅ CORRIGIDO: user_type
+                status="pending"      # ✅ ADICIONADO: status pendente
             )
 
             # ----- CRIA O PACIENTE -----
@@ -65,7 +67,7 @@ def cadastrar_paciente(request):
             paciente.user = user
             paciente.save()
 
-            messages.success(request, 'Paciente cadastrado com sucesso!')
+            messages.success(request, 'Paciente cadastrado com sucesso! Aguarde aprovação.')
             return redirect('cadastro:login')
 
     else:
@@ -96,9 +98,10 @@ def login_view(request):
         if user:
             login(request, user)
 
-            if user.tipo_usuario == "paciente":
+            # ✅ CORRIGIDO: user_type em vez de tipo_usuario
+            if user.user_type == "patient":
                 return redirect('cadastro:dashboard_paciente')
-            elif user.tipo_usuario == "usuario":
+            elif user.user_type == "staff":
                 return redirect('cadastro:dashboard_usuario')
             else:
                 return redirect('cadastro:dashboard_admin')
@@ -133,4 +136,26 @@ def perfil_view(request):
         'user': request.user
     })
 
+@login_required
+def editar_perfil(request):
+    user = request.user
 
+    if request.method == 'POST':
+        user.first_name = request.POST.get('first_name')
+        user.last_name = request.POST.get('last_name')
+        user.email = request.POST.get('email')
+        user.save()
+        return redirect('cadastro:perfil')
+
+    return render(request, 'cadastro/editar_perfil.html')
+
+@login_required
+def alterar_foto(request):
+    profile, created = Profile.objects.get_or_create(user=request.user)
+
+    if request.method == "POST" and request.FILES.get("image"):
+        profile.image = request.FILES["image"]
+        profile.save()
+        return redirect("perfil")
+
+    return render(request, "cadastro/alterar_foto.html", {"profile": profile})

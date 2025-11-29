@@ -16,6 +16,7 @@ class UsuarioForm(UserCreationForm):
 
 class PacienteForm(forms.ModelForm):
     senha = forms.CharField(widget=forms.PasswordInput, label="Senha")
+    confirm_senha = forms.CharField(widget=forms.PasswordInput, label="Confirmar senha")
     doenca = forms.CharField(
         label="Doença",
         required=False,
@@ -26,6 +27,16 @@ class PacienteForm(forms.ModelForm):
     class Meta:
         model = Paciente
         fields = ['nome_completo', 'email', 'doenca', 'laudo', 'senha']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        senha = cleaned_data.get("senha")
+        confirm_senha = cleaned_data.get("confirm_senha")
+
+        if senha and confirm_senha and senha != confirm_senha:
+            self.add_error("confirm_senha", "As senhas não coincidem.")
+
+        return cleaned_data
 
 
 class LoginForm(forms.Form):
