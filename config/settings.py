@@ -9,6 +9,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# ✅ APPS INSTALADOS - ORGANIZADOS
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -16,22 +17,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'accounts.apps.AccountsConfig',  # só essa!
-
-    # Seus apps
-    'relatos',
-    'ong',
-    'conteudos',
-    'eventos',
-    'ajuda',
-    'core',
     'cadastro.apps.CadastroConfig',
 
-    # Extras
+    # SEUS APPS
+    'accounts',      # App de usuários
+    'relatos',       # App de relatos
+    'ong',           # App de ONGs
+    'conteudos',     # App de conteúdos
+    'eventos',       # App de eventos
+    'ajuda',         # App de ajuda
+    'core',          # App core
+       
+    # EXTRAS
     'widget_tweaks',
 ]
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -43,7 +42,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# seu projeto é "config", então:
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
@@ -59,12 +57,12 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
         },
-    }
+    },
 ]
 
-# também é "config"
 WSGI_APPLICATION = 'config.wsgi.application'
 
+# ✅ DATABASE POSTGRESQL
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -76,12 +74,47 @@ DATABASES = {
     }
 }
 
+# ✅ CONFIGURAÇÕES DE AUTENTICAÇÃO (CORRIGIDAS)
+AUTH_USER_MODEL = 'accounts.CustomUser'  # ✅ CORRIGIDO: CustomUser
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'accounts.backends.StatusBackend',  # ✅ Backend customizado
+]
+
+# ✅ URLs DE LOGIN
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/'  # ✅ Vai para a página inicial
+LOGOUT_REDIRECT_URL = '/'  # ✅ Vai para a página inicial
+
+# ✅ CONFIGURAÇÕES DE EMAIL GMAIL
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'sistemaunirarosinfog25@gmail.com'
+EMAIL_HOST_PASSWORD = 'nhtr ekwb ndkn gxrv'
+DEFAULT_FROM_EMAIL = 'Sistema Doenças Raras <sistemaunirarosinfog25@gmail.com>'
+SITE_URL = 'http://localhost:8000'
+
+# ✅ EMAILS DOS ADMINISTRADORES
+ADMIN_EMAILS = [
+    'sistemaunirarosinfog25@gmail.com' 
+]
+
+# ✅ VALIDAÇÕES DE SENHA (ADICIONANDO NOSSA VALIDAÇÃO CUSTOMIZADA)
 AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'accounts.validators.PasswordValidator',  # ✅ NOSSO VALIDADOR
+    },
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 8,  # ✅ Compatível com nossa validação
+        }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -91,21 +124,21 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = 'accounts.User'
-
-LOGIN_REDIRECT_URL = 'dashboard'
-LOGOUT_REDIRECT_URL = 'home'
-
+# ✅ CONFIGURAÇÕES INTERNACIONAIS
 LANGUAGE_CODE = 'pt-br'
 TIME_ZONE = 'America/Sao_Paulo'
-
 USE_I18N = True
 USE_TZ = True
 
+# ✅ ARQUIVOS ESTÁTICOS
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
-
 STATICFILES_DIRS = [
+    BASE_DIR / "static",  # ✅ Pasta static global se tiver
 ]
+
+# ✅ MIDIA FILES (se usar uploads)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
